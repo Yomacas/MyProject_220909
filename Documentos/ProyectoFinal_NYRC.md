@@ -13,12 +13,12 @@
 ___
 
 # ***Actualización anual, tarifa de planes de Medicina Prepagada***
-# ***haciendo uso de modelos GLM (python)***</p>
+# ***haciendo uso de modelos GLM supervisados (python)***</p>
 
 ___
 
 ### Nidia Yomaira Rodríguez Castro
-### Profesor: Álvaro Montenegro</p>
+### Profesor: Álvaro Mauricio Montenegro Diaz</p>
 
 ___
 
@@ -30,9 +30,9 @@ ___
 ![](http://chris35wills.github.io/courses/pydata_stack.png)</p>
 
 > #### Objetivo:
-Cumplir con el compromiso de actualización de los planes de medicina prepagada que en la actualidad comercializa la compañía MedPlus, esto no solo permite el cumplimiento de la normativa que corresponde, además se presenta como una práctica sana de seguimieto y monitoreo de los productos.</p>
-Se aprovecha la oportunidad para aplicar el conocimiento obtenido en el desarrollo del presente Diplomado y aplicar modelos GLM para las medidas de Frecuencia y Severidad (vista como el costo medio).</p>
-Aprovechar la oportunidad para dar a conocer a la organización sobre las nuevas tendencias de análisis de este tipo de trabajos.
+>Cumplir con el compromiso de actualización de los planes de medicina prepagada que en la actualidad comercializa la compañía MedPlus, esto no solo permite el cumplimiento de la normativa que corresponde sino que además se presenta como una práctica sana de seguimiento y monitoreo de los productos.</p>
+>Se aprovecha la oportunidad para aplicar el conocimiento obtenido en el desarrollo del presente Diplomado y aplicar modelos GLM para las medidas de Frecuencia y Severidad (vista como el costo medio).</p>
+>Aprovechar la oportunidad para dar a conocer a la organización sobre las nuevas tendencias de análisis de este tipo de análisis.
 
 Además python se utiliza para la limpieza y manejo de las bases de datos trabajadas.</p>
 
@@ -43,25 +43,27 @@ El precio comercial de los productos de seguros esta dado por la expresión:
 $$
 Prima Comercial = \frac{PCOC}{1-(com+exp+u)} \\ \\
 $$
+
 Donde
 >***com***: porcentaje de comisiones que se da a los intermediarios y fuerza de ventas  
 >***exp***: porcentaje de gastos, deben estar todos incluidos, administrativos y otros  
 >***u***: porcentaje esperado de utilidad
 
-La expresión muestra como los ingresos recibidos por el pago de los productos debe cubrir la siniestralidad, para el caso del ramo de salud es el monto agregado (***PCOC***) esperado de las utilizaciones de servicios de salud por los usuarios o asegurados, el monto de comisiones pagadas a la fuerza de ventas, todos los gastos en los que incurren las compañías para garantizar la continuidad del negocio y además la utilidad esperada del mismo producto
+La expresión muestra como los ingresos recibidos por el pago de los productos debe cubrir la siniestralidad, para el caso del ramo de salud es el monto agregado (***PCOC***) esperado de las utilizaciones de servicios de salud requeridos por los usuarios o asegurados, el monto de comisiones pagadas a la fuerza de ventas, todos los gastos en los que incurren las compañías para garantizar la continuidad del negocio y además la utilidad esperada del mismo producto
 
 Ahora bien el ***PCOC*** (projected cost of claims) esta dada por la siguiente expresión:
 
 $$
 PCOC = RP*(1+IBNR)*(1+ci)*(1+cf)*(1+extS) \\
 $$
+
 Donde
 >***IBNR***: Factor de ajuste por IBNR  
 >***ci***  : Factor de ajuste por la inflación para el período o períodos de aplicación  
 >***cf***  : Factor de ajuste por alguna tendencia identificada en la frecuencia  
 >***extS***: Factor de ajuste por cualquier otro fenómeno externo que deba ser tenido en cuenta (cambios en la política de gobierno)  
 
-Esta expresión contiene el concepto que da origen a este breve estudio, la prima de riesgo (***RP***), el cual se obtiene como el producto de la estimación de la frecuencia y el costo medio, el cual serán obtenidos a partir de la aplicación de los modelos GLM.
+Esta expresión contiene el concepto que da origen a este trabajo, la prima de riesgo (***RP***), el cual se obtiene como el producto de la estimación de la frecuencia y la estimación del costo medio, el cual serán obtenidos a partir de la aplicación de los modelos GLM.
 
 $$
 Prima Pura de Riesgo (RP) = Freq * CM \\
@@ -71,7 +73,7 @@ En otras palabras, cuantas atenciones de servicios de salud son requeridas por "
 
 ### ***Fuentes de datos***
 
-Principalmente será usada la información propia de la compañía MedPlus
+Se usara la información propia de la compañía y el indicador del IPC Salud
 El período de estudio comprenderá desde 01/01/2017 hasta el 30/09/2022
 
 ***Información de Expuestos***
@@ -82,11 +84,11 @@ Se toma la información de cada uno de los cierres contables, un archivo con la 
 
 Variable      | Descripción
 ------------- | -------------
-Anio_Per  | : el año de suscrición según el período de estudio
-Carnet  | : número con el que se identifica el a cada uno de los usuarios (cada individuo en la población)
+Anio_Per  | : el año de suscripción según el período de estudio
+Carnet  | : número con el que se identifica cada uno de los usuarios (cada individuo en la población)
 Rango_E  | : la edad (dispuesta por rangos etareos) de cada uno de los individuos en la población en cada uno de los años
 Sexo  | : el género de cada uno de los individuos en la población
-nombreplan  | :  identificación del producto o del plan de cobertura que tiene el individuo
+nombreplan  | :  identificación del producto o del plan de medicina prepagada que contrata el individuo
 P_NetPtoPag  | : monto de prima después de hacer las descuentos del caso (comisiones, gastos, etc.)
 Exp_F  | : exposición final, porción de año en riesgo o con cobertura
 
@@ -95,7 +97,7 @@ Exp_F  | : exposición final, porción de año en riesgo o con cobertura
 
 Se trabajan dos archivos principalmente, el record del costo médico radicado por parte de los prestadores de servicios de salud (IPS) o proveedores de tecnologías (imágenes) y el archivo de las autorizaciones pendientes por servicios de salud en donde los usuarios manifiestan su querer de hacer uso de algunos servicios de salud y por tanto se crea una autorización en firme con parámetros de usuario, servicios y prestador.
 
-Los valores que se consideran en el estudio o análisis del archivo de costo médico radicado, se indexan a partir del indicador IPC Salud publicado por el DANE, esto se realiza con el fin de mejorar posibles tendencias en los valores año tras año.
+Los valores que se consideran en el estudio o análisis del archivo de costo médico radicado, se indexan a partir del indicador IPC Salud publicado por el DANE, esto se realiza con el fin de disminuir o eliminar posibles tendencias en los valores año tras año.
 
 De estos archivos se obtiene la siguiente información:
 
@@ -105,7 +107,7 @@ Variable      | Descripción
 ------------- | -------------
 Anio_Acc  | : el año de la prestación de la atención en salud
 Carnet  | : número con el que se identifica cada uno de los usuarios (cada individuo en la población) que recibe la atención de salud
-Edad  | : la edad de cada uno de los individuos en la población en cada uno de los meses
+Edad  | : la edad de cada uno de los individuos en la población en cada uno de los años
 Sexo  | : el género de cada uno de los individuos en la población 
 NAP  | : número única de autorización de la prestación es un código alfanumérica que se crea a partir de la información de usuario, servicio y prestador (se usa para el conteo de las atenciones)
 TSA  | : tipo de servicio agrupado, 
@@ -146,7 +148,7 @@ Donde se llama la atención en la parte:</p> "freq_weights = Price_Prod.Exp_F", 
 
 #### Estimación de la Severidad (costo medio)
 
-Como es un problema de conteo, se selecciona la distribución Poisson en la familia exponencial de los modelos GLM.
+Para el caso de modelar valores de dinero, se selecciona la distribución Gamma en la familia exponencial de los modelos GLM.
 
 $$
 f(y; {\theta}) = \frac{y^{{\phi}-1} * {\theta}^{\phi} * e^{-y{\theta}}}{{\Gamma}({\phi})} \\ \\
@@ -160,7 +162,7 @@ gamma_model = sm.GLM(y_1, exog, family = sm.families.Gamma(link=sm.families.link
 result_1 = gamma_model.fit()
 result_1.summary()
 ```
-Donde se llama la atención en las partes:<p>"family = sm.families.Gamma(link=sm.families.links.log())", en donde se cambia la función de enlace que viene por defecto<p>"freq_weights = Price_Prod.Num_Claims", dado que los datos usados son tabulares<p>"missing = 'raise", debido a que la función gamma solo trabaja con valores positivos y se hace tratamiento para los ceros
+Donde se llama la atención en las partes:<p>"family = sm.families.Gamma(link=sm.families.links.log())", en donde se cambia la función de enlace que viene por defecto<p>"freq_weights = Price_Prod.Num_Claims", dado que los datos usados son tabulares<p>"missing = 'raise", debido a que la función gamma solo trabaja con valores positivos y se debe hacer tratamiento para los ceros
 
 #### Resultados Severidad (costo medio)
 
@@ -177,11 +179,15 @@ Plan 6
 
 $$
 Freq = e^{Const + Coef_{Anio2022} + Coef_{SexoM} + Coef_{RangoE 45-49} + Coef_{nombreplan 6}} \\ \\
+
+$$
 Freq = e^{2.9735 + 0.6115 - 0.2880 - 0.3102 + 0.4900} = 12.1436 \\ \\
 $$
     
 $$
 Sev = e^{Const + Coef_{Anio2022} + Coef_{SexoM} + Coef_{RangoE 45-49} + Coef_{nombreplan 6}} \\ \\
+    
+$$
 Sev = e^{-2.0857 - 0.4430 + 0.1876 - 0.0148 + 0.2406} = 0.120597 \\ \\
 $$
 
