@@ -179,6 +179,7 @@ Plan 6
 
 $$
 Freq = e^{Const + Coef_{Anio2022} + Coef_{SexoM} + Coef_{RangoE 45-49} + Coef_{nombreplan 6}} \\ \\
+$$
 
 $$
 Freq = e^{2.9735 + 0.6115 - 0.2880 - 0.3102 + 0.4900} = 12.1436 \\ \\
@@ -186,7 +187,8 @@ $$
     
 $$
 Sev = e^{Const + Coef_{Anio2022} + Coef_{SexoM} + Coef_{RangoE 45-49} + Coef_{nombreplan 6}} \\ \\
-    
+$$
+
 $$
 Sev = e^{-2.0857 - 0.4430 + 0.1876 - 0.0148 + 0.2406} = 0.120597 \\ \\
 $$
